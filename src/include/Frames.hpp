@@ -11,7 +11,7 @@ class FrameHandle{
     public:
     Uint32 targetFrameTime;
     Uint32 currentTime, lastTime;
-    Uint32 deltaTime;
+    long double deltaTime;
     void init(int targetFPS){
         targetFrameTime = 1000/targetFPS;
         currentTime = 0;

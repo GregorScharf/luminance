@@ -21,6 +21,7 @@ public:
         player.texture = SDL_CreateTextureFromSurface(engine::MainProcess::get_renderer(), player.surface);
         bullet_manager.start();
         enemy_manager.start();
+        b.init();
     }
     void update() override
     {

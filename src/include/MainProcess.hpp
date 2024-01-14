@@ -19,21 +19,8 @@ namespace engine
     private:
         SDL_Window *window;
         std::vector<MonoBehaviour *> _updates;
-        void quit()
-        {
-            SDL_DestroyWindow(window);
-            SDL_DestroyRenderer(renderer);
-            SDL_Quit();
-
-            std::ofstream file;
-            std::string text_data;
-            for (int i = 0; i < data.size(); i++)
-            {
-                text_data += std::to_string(data[i]);
-                text_data += "\n";
-            }
-            file << text_data.c_str();
-        }
+        static SDL_Renderer *renderer;
+        bool running;
         void loop()
         {
             while (running)
@@ -72,10 +59,23 @@ namespace engine
             }
             quit();
         }
+        void quit()
+        {
+            SDL_DestroyWindow(window);
+            SDL_DestroyRenderer(renderer);
+            SDL_Quit();
+
+            std::ofstream file;
+            std::string text_data;
+            for (int i = 0; i < data.size(); i++)
+            {
+                text_data += std::to_string(data[i]);
+                text_data += "\n";
+            }
+            file << text_data.c_str();
+        }
 
     public:
-        static SDL_Renderer *renderer;
-        bool running;
         static engine::FrameHandle Time;
         static std::vector<int> data;
         MainProcess(const char *title)
@@ -96,7 +96,7 @@ namespace engine
         {
             return renderer;
         }
-        static Uint32 get_delta_time()
+        static long double get_delta_time()
         {
             return Time.deltaTime;
         }
