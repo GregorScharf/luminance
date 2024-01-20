@@ -4,11 +4,6 @@
 #ifndef SHOOTER_CPP
 #define SHOOTER_CPP
 
-typedef struct
-{
-    long double x;
-    long double y;
-} Vec2;
 
 class BaseBullet
 {
@@ -23,7 +18,6 @@ public:
         std_Speed = 2.0f;
         surface = SDL_LoadBMP("assets/bullet.bmp");
         src = {0, 0, 32, 32};
-    
     }
 };
 
@@ -32,54 +26,44 @@ SDL_Rect BaseBullet::src;
 SDL_Surface *BaseBullet::surface;
 int BaseBullet::maxRange;
 
-class Bullet
-{
-public:
-    Vec2 virtual_pos;
-    SDL_Rect dest;
-    Vec2 direction;
-    int range;
+class Bullet : engine::Moving_Object{
+    public:
+    engine::Vec2 *direction;
+    int16_t range;
     bool maxRangeReached;
-    SDL_Texture *texture;
-    Vec2 speed;
-
-    Bullet(SDL_Rect _player_pos)
+    Bullet(SDL_Surface *surface, SDL_Rect* player_pos) : engine::Moving_Object(surface)
     {
-        dest = { 
-            .x = _player_pos.x,
-            .y = _player_pos.y,
-            .w = 12,
-            .h = 12,
-        };
-        Vec2 mouse_pos;
-        Vec2 player_pos;
-        Vec2 difference;
-        mouse_pos.x = engine::MainProcess::get_mouse_position().x;
-        mouse_pos.y = engine::MainProcess::get_mouse_position().y;
-        player_pos.x = _player_pos.x;
-        player_pos.y = _player_pos.y;
-        difference.x = mouse_pos.x - player_pos.x;
-        difference.y = mouse_pos.y - player_pos.y;
+        texture = SDL_CreateTextureFromSurface(engine::MainProcess::get_renderer(), surface);
 
-        // i cannot get this to be fully accurate, any suggestions are welcome
+        dest.x = player_pos->x;
+        dest.y = player_pos->y;
+        dest.w = 12;
+        dest.h = 12;
+
+        direction = new engine::Vec2;
+
+
+        engine::Vec2 difference; 
+        difference.x = engine::MainProcess::get_mouse_position().x - player_pos->x;
+        difference.y = engine::MainProcess::get_mouse_position().y - player_pos->y;
 
         long double length = sqrt((difference.x * difference.x) + (difference.y * difference.y));
 
-        direction.x = difference.x / length;
-        direction.y = difference.y / length;
+        direction->x = difference.x / length;
+        direction->y = difference.y / length;
 
-        virtual_pos = {player_pos.x, player_pos.y};
+        position->x = dest.x;
+        position->y = dest.y;
+
         range = 0;
         maxRangeReached = false;
-        texture = SDL_CreateTextureFromSurface(engine::MainProcess::get_renderer(), BaseBullet::surface);
-    }
 
-    void update()
-    {
-        virtual_pos.x += direction.x * BaseBullet::std_Speed * engine::MainProcess::get_delta_time();
-        virtual_pos.y += direction.y * BaseBullet::std_Speed * engine::MainProcess::get_delta_time();
-        dest.x = virtual_pos.x;
-        dest.y = virtual_pos.y;
+    }
+    void update(){
+        position->x += direction->x * BaseBullet::std_Speed * engine::MainProcess::get_delta_time();
+        position->y += direction->y * BaseBullet::std_Speed * engine::MainProcess::get_delta_time();
+        dest.x = position->x;
+        dest.y = position->y;
         range++;
         if (range > BaseBullet::maxRange)
         {
@@ -97,13 +81,15 @@ public:
 class BulletManager
 {
 public:
+    int cooldown;
     static std::vector<Bullet *> bullets;
-    void shoot(SDL_Rect _player_pos)
+    void shoot(SDL_Rect *_player_pos)
     {
-        bullets.push_back(new Bullet(_player_pos));
+        bullets.push_back(new Bullet(BaseBullet::surface, _player_pos));
     }
     void start()
     {
+        cooldown = 15;
         std::cout << "Bullet Manager Started \n";
     }
     void update()
@@ -112,8 +98,8 @@ public:
         {
             if (bullets[i]->maxRangeReached)
             {
-                delete bullets[i];
-                delete_bullet(i);
+                delete bullets[i]; // free memory
+                delete_bullet(i); // delete reference
             }
             else
             {
@@ -133,5 +119,4 @@ public:
         bullets.erase(bullets.begin() + index);
     }
 };
-
 #endif

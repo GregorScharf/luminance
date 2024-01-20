@@ -25,9 +25,9 @@ public:
     }
     void update() override
     {
-        //enemy_manager.update(player.get_pos());
+        enemy_manager.update(player.get_pos());
         bullet_manager.update();
-    }
+    } 
     void input(const Uint8 *key_state) override
     {
         if (key_state[SDL_SCANCODE_W])
@@ -63,5 +63,7 @@ int main()
 {
     Example test;
     engine::MainProcess engine("hello World");
+
+    std::cout << sizeof(long double);
     return 0;
 }

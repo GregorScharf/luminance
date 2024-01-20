@@ -9,6 +9,7 @@
 #include "MonoBehaviour.hpp"
 #include "MainProcess.hpp"
 #include "Frames.hpp"
+#include "Moving_Object.hpp"
 
 SDL_Renderer* engine::MainProcess::renderer;
 engine::FrameHandle engine::MainProcess::Time;

@@ -48,7 +48,7 @@ public:
     void start(){
         spawn_rate = engine::MainProcess::get_Fps() * 5;
     }
-    void update(SDL_Rect _player_pos)
+    void update(SDL_Rect *_player_pos)
     {
         if (spawn_timer == 1)
         {
@@ -63,7 +63,7 @@ public:
         spawn_timer++;
         for (int i = 0; i < enemies.size(); i++)
         {
-            enemies[i]->chase_player(_player_pos, engine::MainProcess::get_delta_time());
+            enemies[i]->chase_player(*_player_pos, engine::MainProcess::get_delta_time());
         }
     }
     void render(SDL_Renderer *renderer)

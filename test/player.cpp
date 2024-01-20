@@ -4,6 +4,9 @@
 #ifndef PLAYER_CPP
 #define PLAYER_CPP
 
+
+using namespace engine;
+
 const Vec2 up = {0, -1};
 const Vec2 down = {0, 1};
 const Vec2 left = {-1, 0};
@@ -40,9 +43,9 @@ public:
     {
         SDL_RenderCopy(renderer, texture, &src, &dest);
     }
-    SDL_Rect& get_pos()
+    SDL_Rect* get_pos()
     {
-        return dest;
+        return &dest;
     }
 };
 
