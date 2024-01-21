@@ -1,5 +1,5 @@
 #include <luminance/include/engine.hpp>
-#include "player.cpp"
+#include "player.cpp" 
 #include "enemy.cpp"
 #include "shooter.cpp"
 
@@ -63,7 +63,5 @@ int main()
 {
     Example test;
     engine::MainProcess engine("hello World");
-
-    std::cout << sizeof(long double);
     return 0;
 }

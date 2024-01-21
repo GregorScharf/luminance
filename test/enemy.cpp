@@ -3,33 +3,43 @@
 #ifndef ENEMY_CPP
 #define ENEMY_CPP
 
+class BaseEnemy
+{
+public:
+    static SDL_Rect src;
+    static SDL_Surface *surface;
+    static long double std_Speed;
+
+    void init()
+    {
+        std_Speed = 0.002;
+        surface = SDL_LoadBMP("assets/enemy.bmp");
+        src = {0, 0, 32, 32};
+    }
+};  
+
+long double BaseEnemy::std_Speed;
+SDL_Rect BaseEnemy::src;
+SDL_Surface *BaseEnemy::surface;
+
 class Enemy
 {
 public:
-    SDL_Rect src, dest;
+    SDL_Rect dest;
     SDL_Texture *texture;
-    SDL_Surface *surface;
-    long double Speed;
-    int slow_down_index;
     Enemy()
     {
-        Speed = 0.002;
-        surface = SDL_LoadBMP("assets/enemy.bmp");
-        texture = SDL_CreateTextureFromSurface(engine::MainProcess::get_renderer(), surface);
-        SDL_FreeSurface(surface);
-        src = {0, 0, 32, 32};
+        texture = SDL_CreateTextureFromSurface(engine::MainProcess::get_renderer(), BaseEnemy::surface);
         dest = {0, 0, 32, 32};
-        slow_down_index = 0;
     }
 
     void chase_player(SDL_Rect destination, int deltaTime)
     {
-        dest.x += (destination.x - dest.x) * Speed * deltaTime;
-        dest.y += (destination.y - dest.y) * Speed * deltaTime;
+        
     }
     void render(SDL_Renderer *renderer)
     {
-        SDL_RenderCopy(renderer, texture, &src, &dest);
+        SDL_RenderCopy(renderer, texture, &BaseEnemy::src, &dest);
     }
 };
 

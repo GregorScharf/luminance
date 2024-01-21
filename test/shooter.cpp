@@ -78,18 +78,23 @@ class Bullet : engine::Moving_Object{
     }
 };
 
-class BulletManager
-{
+class BulletManager{
 public:
-    int cooldown;
+    float shooting_cooldown;
+    int active_cooldown;
     static std::vector<Bullet *> bullets;
     void shoot(SDL_Rect *_player_pos)
     {
-        bullets.push_back(new Bullet(BaseBullet::surface, _player_pos));
+        if(active_cooldown > shooting_cooldown){
+            bullets.push_back(new Bullet(BaseBullet::surface, _player_pos));
+            active_cooldown = 0;
+        }
+        
     }
     void start()
     {
-        cooldown = 15;
+        shooting_cooldown = 0.2f*engine::MainProcess::get_Fps();
+        active_cooldown = 0;
         std::cout << "Bullet Manager Started \n";
     }
     void update()
@@ -106,6 +111,7 @@ public:
                 bullets[i]->update();
             }
         }
+        active_cooldown++;
     }
     void render(SDL_Renderer *renderer)
     {
