@@ -7,7 +7,11 @@ std::vector<Bullet *> BulletManager::bullets;
 std::vector<Enemy *> EnemyManager::enemies;
 
 
-class Example : engine::MonoBehaviour
+class myclass{
+
+};
+
+class Example : MonoBehaviour
 {
 public:
     Player player;
@@ -25,7 +29,7 @@ public:
     }
     void update() override
     {
-        enemy_manager.update(player.get_pos());
+        // enemy_manager.update(player.get_pos());
         bullet_manager.update();
     } 
     void input(const Uint8 *key_state) override

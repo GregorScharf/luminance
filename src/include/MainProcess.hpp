@@ -1,3 +1,4 @@
+#include "glad.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "enums.hpp"
@@ -81,14 +82,38 @@ namespace engine
     public:
         static engine::FrameHandle Time;
         static std::vector<int> data;
+        SDL_GLContext gl_context;
         MainProcess(const char *title)
         {
             _updates = MonoBehaviour::process_updates;
-            window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_RESIZABLE);
+
+            if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+            {
+                std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+                return;
+            }
+
+
+            window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1400, 1000, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+
+            gl_context = SDL_GL_CreateContext(window);
+
             running = true;
             data = engine::init();
             Time.init(data[TARGET_FPS]);
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+            if(!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+            {
+                std::cout << "Failed to initialize OpenGL context" << std::endl;
+                return;
+            }
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+            SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+            SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
             for (MonoBehaviour *processes : _updates)
             {
                 processes->start();
