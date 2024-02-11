@@ -7,8 +7,13 @@ std::vector<Bullet *> BulletManager::bullets;
 std::vector<Enemy *> EnemyManager::enemies;
 
 
-class myclass{
-
+class myclass : MonoBehaviour{
+    void start() override{
+        std::cout << "Hello World!" << std::endl;
+    }
+    void update() override{
+        std::cout << "Hello World!" << std::endl;
+    }
 };
 
 class Example : MonoBehaviour
@@ -66,6 +71,7 @@ public:
 int main()
 {
     Example test;
-    engine::MainProcess engine("hello World");
+    myclass test2;
+    MainProcess engine("hello World");
     return 0;
 }
