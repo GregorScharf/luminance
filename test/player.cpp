@@ -24,7 +24,7 @@ public:
         Speed = 2;
         surface = SDL_LoadBMP("assets/player.bmp");
         src = {0, 0, 32, 32};
-        dest = {0, 0, 32, 32};
+        dest = {64, 64, 32, 32};
     }
     Player(const char *path, int speed)
     {
